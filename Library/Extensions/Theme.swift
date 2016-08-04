@@ -1,4 +1,11 @@
 import UIKit
+import Hex
+
+extension UIColor {
+    class func customColor() -> UIColor {
+        return UIColor(hex: "FF4B47")
+    }
+}
 
 extension UIFont {
     class func black(size: Double) -> UIFont {
@@ -27,5 +34,13 @@ extension UIFont {
 
     class func semiBold(size: Double) -> UIFont {
         return UIFont(name: "ProximaNova-Semibold", size: CGFloat(size))!
+    }
+
+    class func detailBook(size: Double) -> UIFont {
+        return UIFont(name: "BodoniSvtyTwoITCTT-Book", size: CGFloat(size))!
+    }
+
+    class func detailBookItalic(size: Double) -> UIFont {
+        return UIFont(name: "BodoniSvtyTwoITCTT-BookIta", size: CGFloat(size))!
     }
 }

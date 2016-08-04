@@ -9,11 +9,11 @@ class VenuesController: BaseTableViewController {
             NSSortDescriptor(key: VenueAttributes.city.rawValue, ascending: true),
             NSSortDescriptor(key: VenueAttributes.name.rawValue, ascending: true)
         ]
-        let dataSource = DATASource(tableView: self.tableView!, cellIdentifier: VenueCell.Identifier, fetchRequest: request, mainContext: self.fetcher.context, sectionName: VenueAttributes.city.rawValue, configuration: { cell, item, indexPath in
+        let dataSource = DATASource(tableView: self.tableView, cellIdentifier: VenueCell.Identifier, fetchRequest: request, mainContext: self.fetcher.viewContext, sectionName: VenueAttributes.city.rawValue) { cell, item, indexPath in
             if let cell = cell as? VenueCell, venue = item as? Venue {
                 cell.venue = venue
             }
-        })
+        }
 
         dataSource.delegate = self
 
@@ -27,19 +27,31 @@ class VenuesController: BaseTableViewController {
         self.tableView.registerClass(VenueCell.self, forCellReuseIdentifier: VenueCell.Identifier)
         self.tableView.registerClass(VenuesHeader.self, forHeaderFooterViewReuseIdentifier: VenuesHeader.Identifier)
         self.tableView.dataSource = self.dataSource
+        self.tableView.delegate = self
         self.tableView.rowHeight = 60
+
+        self.fetcher.posts { error in
+            
+        }
     }
 }
 
-extension VenuesController {
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+extension VenuesController: UITableViewDelegate {
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return CGFloat(35)
     }
 
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(VenuesHeader.Identifier) as? VenuesHeader
         header?.textLabel?.text = self.dataSource.titleForHeaderInSection(section)
+
         return header
+    }
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let venue = self.dataSource.objectAtIndexPath(indexPath) as! Venue
+        let venueController = VenueController(fetcher: self.fetcher, venue: venue)
+        self.presentViewController(venueController, animated: true, completion: nil)
     }
 }
 
@@ -50,13 +62,5 @@ extension VenuesController: DATASourceDelegate {
 
     func sectionIndexTitlesForDataSource(dataSource: DATASource, tableView: UITableView) -> [String] {
         return [String]()
-    }
-}
-
-extension VenuesController {
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let venue = self.dataSource.objectAtIndexPath(indexPath) as! Venue
-        let venueController = VenueController(fetcher: self.fetcher, venue: venue)
-        self.presentViewController(venueController, animated: true, completion: nil)
     }
 }

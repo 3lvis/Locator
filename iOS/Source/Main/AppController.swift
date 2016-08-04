@@ -34,7 +34,7 @@ extension AppController: UIApplicationDelegate {
         tabController.viewControllers = [mapNavigationController, venuesNavigationController]
         window.rootViewController = tabController
         window.makeKeyAndVisible()
-
+        
         return true
     }
 }
