@@ -1,6 +1,6 @@
 # Locator
 
-Display locations on a list or a map
+Display locations on a list or a map.
 
 ## Running the project
 
